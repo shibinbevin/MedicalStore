@@ -1,0 +1,9 @@
+extend layout
+
+block content
+    h1= medicine.name
+    h5 Company: #{medicine.company}
+    h5 Expiry Date : #{medicine.exp}
+    hr
+    a.btn.btn-default(href="/medicines/edit/"+medicine._id) Edit
+    a.btn.btn-danger#delete-medicine(href='', dataid=medicine._id) Delete

@@ -1,0 +1,32 @@
+head
+    title Medical Store App
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css")
+
+body
+    .container
+        nav.navbar.navbar-expand-md.navbar-dark.bg-info.fixed-top
+            a.navbar-brand(href='#') Medical Store App
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar', aria-controls='navbar', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbar
+                ul.navbar-nav.mr-auto
+                    li.nav-item.active
+                        a.nav-link(href='/') Home
+                    li.nav-item
+                        a.nav-link(href='/medicines/add') Add Medicine
+                    li.nav-item
+                        a.nav-link(href='/user/logout') Logout          
+    .container
+        br
+        br
+        br
+        != messages('message', locals)
+        if errors
+            each error in errors
+                div(class='alert alert-danger') #{error.msg}
+        block content
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js")
+    script(src='/js/main.js')
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer")

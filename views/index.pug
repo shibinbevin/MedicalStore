@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    form(action="/" method="get")
+        input.ml-2(type="text" id="searchTerm" name="search")
+        button.btn.btn-success.ml-2(type="submit") Search
+    h1 #{title}
+    ul.list-group
+        each medicine in medicines
+            li.list-group-item 
+                a(href="/medicines/"+medicine._id)= medicine.name
+    br
+    include paginate

@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method='POST', action='/medicines/add')
+        #form-group
+            label Name
+            input.form-control(name='name', type='text')
+        #form-group
+            label Company 
+            input.form-control(name='company', type='text')
+        #form-group
+            label Expiry Date
+            input.form-control(name='exp', type='date')
+        input.btn.btn-primary(type='submit', value='Submit')
