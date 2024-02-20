@@ -4,6 +4,8 @@ const {body, validationResult} = require('express-validator');
 
 const User = require("../models/users")
 
+const bcrypt = require("bcrypt")
+
 router.get("/login",(req, res)=>{
     res.render("login");
 });
@@ -14,14 +16,25 @@ router.get("/register",(req, res)=>{
 
 router.post("/login", (req, res)=>{
     let query = {
-        username: req.body.username,
-        password: req.body.password
+        username: req.body.username
     }
     User.findOne(query)
     .then(user=>{
         if(user){
-            req.session.username = user.username;
-            res.redirect("/")
+            bcrypt
+            .compare(req.body.password, user.password)
+            .then(response => {
+                if(response === true){
+                    req.session.username = user.username;
+                    res.redirect("/")
+                }else{
+                    req.flash('danger', 'Invalid Login')
+                    res.render('login');
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            }) 
         }else{
             req.flash('danger', 'Invalid Login')
             res.render('login');
@@ -59,19 +72,26 @@ async (req, res)=>{
         })
     }
     else{
-    let newUser = new User({
-        name: req.body.name,
-        username: req.body.username,
-        password: req.body.password
-    });
-    newUser.save()
-    .then(()=>{
-        req.flash("success", "Registered successfully")
-        res.redirect("/login")
-    })
-    .catch(error=>{
-        console.log(error);
-    })
+        let saltRounds = 10;
+    bcrypt
+    .hash(req.body.password, saltRounds)
+    .then(hash => {
+        let newUser = new User({
+            name: req.body.name,
+            username: req.body.username,
+            password: hash
+        });
+        newUser.save()
+        .then(()=>{
+            req.flash("success", "Registered successfully")
+            res.redirect("/login")
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+  })
+  .catch(err => console.error(err.message))
+    
     }
 })
 

@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const session = require('express-session');
 const flash = require('connect-flash');
 const paginate = require('express-paginate')
-const path = require('path')
+const path = require('path');
 
-mongoose.connect('mongodb://localhost/medicalStore')
+require('dotenv').config({ path: path.resolve(__dirname, '…/.env') });
+
+mongoose.connect(process.env.connection_string)
 .then(db=>{
     console.log("connected to mongodb")
 })
@@ -16,7 +18,7 @@ mongoose.connect('mongodb://localhost/medicalStore')
 const app = express();
 
 app.use(session({
-    secret: 'keyboard cat',
+    secret: process.env.secret_key,
     resave: false,
     saveUninitialized: true,
 }));
@@ -76,37 +78,10 @@ app.get("/", async (req, res)=>{
     })
 });
 
-// app.get("/search" , async (req, res)=>{
-//     let searchTerm = req.query.keyword;
-//     if(searchTerm){
-//         if(searchTerm.trim() === ""){
-//             var [filteredMedicines, itemCount] = await Promise.all([
-//                 Medicine.find().limit(req.query.limit).skip(req.skip),
-//                 Medicine.countDocuments({})
-//             ]);
-//         } 
-//         else{
-//             const regex = new RegExp(searchTerm, 'i');
-//             var [filteredMedicines, itemCount] = await Promise.all([
-//                 Medicine.find({ name: regex }).limit(req.query.limit).skip(req.skip),
-//                 Medicine.countDocuments({name: regex})
-//         ]);
-//         }
-//         let pageCount = Math.ceil(itemCount / req.query.limit);
-//         res.render("index", {
-//             title: "Medicines",
-//             medicines: filteredMedicines,
-//             pageCount, 
-//             itemCount, 
-//             pages: paginate.getArrayPages(req)(5, pageCount, req.query.page)
-//         })
-//     }
-// })
-
 const medicines = require("./routes/medicine");
 
 app.use("/medicines", medicines);
 
 app.listen(8080, function(){
-    console.log("server started on port 8080")
+    console.log("server started on port 8080");
 })
